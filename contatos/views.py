@@ -1,15 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404
+from django.http import JsonResponse, HttpResponse
+import csv
 from django.core.paginator import Paginator
-from django.db.models import Q, Value
-from django.db.models.functions import Concat
 from django.contrib import messages
-from .models import Contato
+from contatos.models import Contato
 
 def index(request):
-    contatos = Contato.objects.order_by('-id').filter(
-        mostrar=True
-    )
+    contatos = Contato.objects.order_by('-id')
+
     paginator = Paginator(contatos, 10)
 
     page = request.GET.get('p')
@@ -19,11 +17,34 @@ def index(request):
         'contatos': contatos,
     })
 
+
+def contatos_xlxs(request):
+    return render(request, 'contatos/contatos_xlxs.html')
+
+def contatos_json(request):
+    data = list(Contato.objects.values())
+    contatos = JsonResponse(data,safe = False)
+    return render(request, 'contatos/contatos_json.html', {
+        'contatos': contatos,
+    })
+
+def contatos_cvs(request):
+    contatos = Contato.objects.all()
+
+    dados = HttpResponse(content_type='text/csv')
+    dados['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+    writer = csv.writer(dados)
+    writer.writerow(['ID', 'Email', 'senha', 'Data de nascimento'])
+    for contato in contatos:
+        writer.writerow([contato.id, contato.email, contato.senha, contato.data_nascimento])
+
+    return render(request, 'contatos/contatos_cvs.html', {
+        'dados': dados
+    })
+
 def ver_contato(request, contato_id):
     contato = get_object_or_404(Contato, id=contato_id)
-
-    if not contato.mostrar:
-        raise Http404()
 
     return render(request, 'contatos/ver_contato.html', {
         'contato': contato,
@@ -36,13 +57,7 @@ def busca(request):
         messages.add_message(request, messages.WARNING, 'O campo de busca está vazio')
         return redirect('index')
 
-    campo = Concat('nome', Value(' '), 'sobrenome')
-
-    contatos = Contato.objects.order_by('-id').annotate(
-        nome_completo=campo
-    ).filter(
-        Q(nome_completo__icontains=termo) | Q(telefone__icontains=termo)
-    )
+    contatos = Contato.objects.filter(email__contains=termo)
     paginator = Paginator(contatos, 10)
 
     page = request.GET.get('p')

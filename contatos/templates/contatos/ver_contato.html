@@ -5,33 +5,20 @@ Contatos
 {% endblock %}
 
 {%block 'conteudo'%}
-<h1 class="mt-5">{{ contato.nome }} {{ contato.sobrenome }}</h1>
-
-{% if contato.foto %}
-    <p>
-        <img src="{{ contato.foto.url }}" style="max-width: 250px; height: 250px;" />
-    </p>
-{% endif %}
+<h1 class="mt-5">{{ contato.email }}</h1>
 
 <dl>
     <dt>ID</dt>
     <dd>{{ contato.id }}</dd>
 
-    <dt>Telefone</dt>
-    <dd>{{ contato.telefone }}</dd>
-
     <dt>E-mail</dt>
     <dd>{{ contato.email }}</dd>
 
-    <dt>Data criação</dt>
-    <dd>{{ contato.data_criacao|date:'d/m/Y H:i:s'}}</dd>
+    <dt>Senha</dt>
+    <dd><input type="password" value="{{ contato.senha }}" disabled class="border-0"/></dd>
 
-    <dt>Categoria</dt>
-    <dd>{{ contato.categoria }}</dd>
+    <dt>Data de nascimento</dt>
+    <dd>{{ contato.data_nascimento|date:'d/m/Y H:i:s'}}</dd>
 
-    <dt>Descrição</dt>
-    <dd>
-        {{ contato.descricao }}
-    </dd>
 </dl>
 {%endblock%}

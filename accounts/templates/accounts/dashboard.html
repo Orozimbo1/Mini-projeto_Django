@@ -5,7 +5,9 @@ Dashboard {{ user }}
 {% endblock %}
 
 {% block 'conteudo' %}
-    <h1 class="mt-4 mb-3">Olá {{ user.first_name }} {{ user.last_name }}</h1>
+    <h1 class="mt-4 mb-3">Olá {{ user }}</h1>
+    <p>Aqui você pode cadastrar novos contatos.</p>
+    <p class="mb-5">Esses contatos serão exibidos na pagina inicial, para ir para lá basta clicar na palavra 'Frexco' logo acima.</p>
     {% include 'parciais/_messages.html' %}
 
     <div class="container">

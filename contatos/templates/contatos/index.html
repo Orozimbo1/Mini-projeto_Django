@@ -1,50 +1,58 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block 'titulo' %}
 Agenda
 {% endblock %}
 
 {%block 'conteudo'%}
-    <h1 class="mt-5">Minha agenda</h1>
+<div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+        <h1>Minha agenda</h1>
+        <div class="d-flex">
+            <a class="dropdown-item bolder text-success" href="{% url 'json' %}"><h4>Json</h4></a>
+            <a class="dropdown-item bolder text-success" href="{% url 'cvs' %}"><h4>Cvs</h4></a>
+            <a class="dropdown-item bolder text-success " href="{% url 'xlxs' %}"><h4>Xlxs</h4></a>
+        </div>
+</div>
 
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
         <tr>
             <th>ID</th>
-            <th>Nome</th>
-            <th>Sobrenome</th>
-            <th>Telefone</th>
-            <th>Categoria</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Data de nascimento</th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         {% for contato in contatos %}
-            <tr>
-                <td>{{ contato.id }}</td>
-                <td>
-                <a href="{% url 'ver_contato' contato.id %}">{{ contato.nome }}</a>
-                </td>
-                <td>{{ contato.sobrenome }}</td>
-                <td>{{ contato.telefone }}</td>
-                <td>{{ contato.categoria }}</td>
-            </tr>
+        <tr>
+            <td>
+                <a href="{% url 'ver_contato' contato.id %}">{{ contato.id }}</a>
+            </td>
+            <td>{{ contato.email }}</td>
+            <td>
+                <input type="password" value="{{ contato.senha }}" disabled class="border-0" />
+            </td>
+            <td>{{ contato.data_nascimento }}</td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            {% for pagina in contatos.paginator.page_range %}
-                {% if contatos.number == pagina %}
-                    <li class="page-item active">
-                        <a class="page-link" href="?p={{ pagina }}&termo={{ request.GET.termo }}">{{ pagina }}</a>
-                    </li>
-                {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?p={{ pagina }}&termo={{ request.GET.termo }}">{{ pagina }}</a>
-                    </li>
-                {%endif%}
-            {% endfor %}
-        </ul>
-    </nav>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        {% for pagina in contatos.paginator.page_range %}
+        {% if contatos.number == pagina %}
+        <li class="page-item active">
+            <a class="page-link" href="?p={{ pagina }}&termo={{ request.GET.termo }}">{{ pagina }}</a>
+        
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?p={{ pagina }}&termo={{ request.GET.termo }}">{{ pagina }}</a>
+        
+        {%endif%}
+        {% endfor %}
+    </ul>
+</nav>
 {%endblock%}

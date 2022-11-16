@@ -4,6 +4,8 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import FormContato
+from random import choice
+import string
 
 def login(request):
     if request.method != 'POST' :
@@ -36,14 +38,12 @@ def register(request):
     if request.method != 'POST' :
         return render(request, 'accounts/register.html') 
 
-    nome = request.POST.get('nome')
-    sobrenome = request.POST.get('sobrenome')
     email = request.POST.get('email')
     usuario = request.POST.get('usuario')
     senha = request.POST.get('senha')
     senha2 = request.POST.get('senha2')
 
-    if not nome or not sobrenome or not email or not usuario or not senha or not senha2:
+    if not email or not usuario or not senha or not senha2:
         messages.add_message(request, messages.WARNING, 'Nenhum campo pode estar vazio')
         return render(request, 'accounts/register.html')
 
@@ -73,7 +73,7 @@ def register(request):
         messages.add_message(request, messages.WARNING, 'Email já existe')
         return render(request, 'accounts/register.html')
 
-    user = User.objects.create_user(username=usuario, email=email, first_name=nome, last_name=sobrenome, password=senha)
+    user = User.objects.create_user(username=usuario, email=email, password=senha)
     user.save()
 
     messages.add_message(request, messages.SUCCESS, 'Registrado com sucesso, faça login')
@@ -85,7 +85,7 @@ def dashboard(request):
         form = FormContato()
         return render(request, 'accounts/dashboard.html', { 'form': form})
     
-    form = FormContato(request.POST, request.FILES)
+    form = FormContato(request.POST)
 
     if not form.is_valid:
         messages.add_message(request, messages.WARNING, 'Ocorreu um erro ao salvar o contato')
@@ -94,4 +94,13 @@ def dashboard(request):
         
     form.save()
     return redirect('dashboard')
+
+def gerar_senha_aleatoria(request):
+    tamanho_da_senha = 10
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    senha = ''
+    for i in range(tamanho_da_senha):
+        senha += choice(caracteres)
+    return senha
+
     
