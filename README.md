@@ -1,18 +1,18 @@
 # Mini-projeto_Django
-Mini projeto feito em Python, utilizando oframework Django
+Mini projeto feito em Python, utilizando Django
 
 Olá seja bem vindo, aqui estarão as instruções para rodar esse projeto
 
 * Criar um ambiente virtual 
-    pyhon -m venv venv
+
+       python -m venv venv
   
 * Ativar o ambiente recém criado
-   # Windows:
-   
+
+   * Windows:
       .\venv\Scripts\Activate.ps1
       
-   # Linux:
-   
+   * Linux:
       .\venv\Scipts\activate
       
 * Baixar os pacotes necessários
